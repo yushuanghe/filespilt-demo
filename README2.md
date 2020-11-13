@@ -1,0 +1,1 @@
+java -classpath target\filespilt-0.0.1-SNAPSHOT-jar-with-dependencies.jar com.daoqidlv.filespilt.Test C:\Users\yushu\Downloads\file_split zhifubao_request_20201113.txt 1 FORKJOIN

@@ -46,3 +46,6 @@ Temporary Items
 .classpath
 .gitignore
 .project
+.idea/
+dependency-reduced-pom.xml
+filespilt.iml
