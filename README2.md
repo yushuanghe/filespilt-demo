@@ -1,6 +1,10 @@
+```bash
 mvn clean assembly:assembly
 
 java -classpath target\filespilt-0.0.1-SNAPSHOT-jar-with-dependencies.jar com.daoqidlv.filespilt.Test C:\Users\yushu\Downloads\file_split zhifubao_request_20201113.txt 1 FORKJOIN
+
+python src/main/python/combine_files.py
+```
 
 ```sql
 add jar /data/shuanghe.yu/sigmob-bigdata-processing.jar;
@@ -67,4 +71,15 @@ OUTPUTFORMAT
 ;
 
 LOAD DATA LOCAL INPATH '/home/data_deployer/result.txt' OVERWRITE INTO TABLE tmp.zhifubao_result_20201113;
+
+
+
+
+select
+a.uid
+from tmp.zhifubao_request_20201113 a
+join (select * from tmp.zhifubao_result_20201113 where imei_md5 in ('L00002','L00016','L00009','L00008','L00005')) b
+on (a.imei_md5=b.uid)
+group by a.uid
+;
 ```
