@@ -12,11 +12,11 @@ import java.io.RandomAccessFile;
 public class GenBigFile {
 	
 	public static void main(String[] args) throws FileNotFoundException {
-		String fileName = "D:\\temp\\test.csv";
-		for(int i=0; i<1; i++) {
-			WriteFileTask task = new WriteFileTask(fileName, i*1024*1024*1024, 1024*1024*1024);
-			task.start();
-		}
+		// String fileName = "D:\\temp\\test.csv";
+		// for(int i=0; i<1; i++) {
+		// 	WriteFileTask task = new WriteFileTask(fileName, i*1024*1024*1024, 1024*1024*1024);
+		// 	task.start();
+		// }
 		
 	}
 	

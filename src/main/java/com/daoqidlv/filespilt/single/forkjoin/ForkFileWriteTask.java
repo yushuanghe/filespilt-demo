@@ -15,7 +15,7 @@ import com.alipay.api.domain.DeviceResultInfo;
 import com.alipay.api.request.AlipayUserAccountDeviceInfoQueryRequest;
 import com.alipay.api.response.AlipayUserAccountDeviceInfoQueryResponse;
 import com.daoqidlv.filespilt.Util;
-import jdk.nashorn.internal.runtime.GlobalConstants;
+import com.daoqidlv.filespilt.util.StringBuilderPlus;
 
 /**
  * 文件写入任务类，记录每个文件写入任务信息，且完成文件写入。
@@ -69,42 +69,77 @@ public class ForkFileWriteTask extends RecursiveTask<Integer> {
         try {
             FileWriter fw = new FileWriter(file);
             bw = new BufferedWriter(fw);
+
+            int i = 1;
+            StringBuilderPlus sb = new StringBuilderPlus();
             for (String lineContent : fileContent) {
-                String result = null;
                 // TODO: 2020-11-13 请求支付宝接口
-                AlipayUserAccountDeviceInfoQueryRequest request = new AlipayUserAccountDeviceInfoQueryRequest();
-                request.setBizContent(String.format("{\"device_type\":\"IDFA\",\"device_ids\":[\"%s\"],\"encrypt_type\":\"MD5\",\"request_from\":\"sigmob\"}", lineContent));
-                AlipayUserAccountDeviceInfoQueryResponse response = null;
-                try {
-                    response = ALIPAY_CLIENT.execute(request);
-                    if (response.isSuccess()) {
-                        //System.out.println("调用成功");
-                        //System.out.println(response.getDeviceType());
-                        //System.out.println(response.getEncryptType());
-                        //System.out.println(response.getResultCode());
-                        List<DeviceResultInfo> infos = response.getDeviceInfos();
-                        for (DeviceResultInfo info : infos) {
-                            //System.out.println(String.format("device_id:%s;device_label:%s", info.getDeviceId(), info.getDeviceLabel()));
-                            result = info.getDeviceLabel();
+                sb.append("\"").append(lineContent).append("\"").append(",");
+                if (i % 5 == 0) {
+                    //批量请求
+                    AlipayUserAccountDeviceInfoQueryRequest request = new AlipayUserAccountDeviceInfoQueryRequest();
+                    request.setBizContent(String.format("{\"device_type\":\"IMEI\",\"device_ids\":[%s],\"encrypt_type\":\"MD5\",\"request_from\":\"sigmob\"}", sb.deleteLastChar().toString()));
+                    AlipayUserAccountDeviceInfoQueryResponse response = null;
+                    try {
+                        response = ALIPAY_CLIENT.execute(request);
+                        if (response.isSuccess()) {
+                            //System.out.println("调用成功");
+                            List<DeviceResultInfo> infos = response.getDeviceInfos();
+                            if (infos!=null){
+                                for (DeviceResultInfo info : infos) {
+                                    //System.out.println(String.format("device_id:%s;device_label:%s", info.getDeviceId(), info.getDeviceLabel()));
+                                    String label = info.getDeviceLabel();
+                                    //写文件
+                                    bw.write(info.getDeviceId() + ";" + label);
+                                    bw.newLine();
+                                    bw.flush();
+                                    writtenSize += label.length();
+                                }
+                            }
+                            
+                        } else {
+                            //System.out.println("调用失败");
                         }
-                    } else {
-                        //System.out.println("调用失败");
+                    } catch (AlipayApiException e) {
+                        e.printStackTrace();
                     }
-                } catch (AlipayApiException e) {
-                    e.printStackTrace();
+                    sb.deleteAll();
                 }
 
-                bw.write(lineContent + ";" + result);
-                bw.newLine();
-                bw.flush();
-                writtenSize += result.length();
+                i++;
             }
+
+            //批量请求
+            AlipayUserAccountDeviceInfoQueryRequest request = new AlipayUserAccountDeviceInfoQueryRequest();
+            request.setBizContent(String.format("{\"device_type\":\"IMEI\",\"device_ids\":[%s],\"encrypt_type\":\"MD5\",\"request_from\":\"sigmob\"}", sb.deleteLastChar().toString()));
+            AlipayUserAccountDeviceInfoQueryResponse response = null;
+            try {
+                response = ALIPAY_CLIENT.execute(request);
+                if (response.isSuccess()) {
+                    //System.out.println("调用成功");
+                    List<DeviceResultInfo> infos = response.getDeviceInfos();
+                    if (infos!=null){
+                        for (DeviceResultInfo info : infos) {
+                            //System.out.println(String.format("device_id:%s;device_label:%s", info.getDeviceId(), info.getDeviceLabel()));
+                            String label = info.getDeviceLabel();
+                            //写文件
+                            bw.write(info.getDeviceId() + ";" + label);
+                            bw.newLine();
+                            bw.flush();
+                            writtenSize += label.length();
+                        }
+                    }
+                    
+                } else {
+                    //System.out.println("调用失败");
+                }
+            } catch (AlipayApiException e) {
+                e.printStackTrace();
+            }
+
             System.out.println("写入一个子文件，文件名为：" + this.fileName + ", 文件大小为：" + this.fileSize);
-        } catch (FileNotFoundException e) {
-            //TODO 日志记录
-            System.err.println("写文件错误！");
-            e.printStackTrace();
         } catch (IOException e) {
+            //TODO 日志记录
             System.err.println("写文件错误！");
             e.printStackTrace();
         } finally {
