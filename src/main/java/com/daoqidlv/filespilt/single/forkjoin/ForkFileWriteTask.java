@@ -85,7 +85,7 @@ public class ForkFileWriteTask extends RecursiveTask<Integer> {
                         if (response.isSuccess()) {
                             //System.out.println("调用成功");
                             List<DeviceResultInfo> infos = response.getDeviceInfos();
-                            if (infos!=null){
+                            if (infos != null) {
                                 for (DeviceResultInfo info : infos) {
                                     //System.out.println(String.format("device_id:%s;device_label:%s", info.getDeviceId(), info.getDeviceLabel()));
                                     String label = info.getDeviceLabel();
@@ -96,7 +96,7 @@ public class ForkFileWriteTask extends RecursiveTask<Integer> {
                                     writtenSize += label.length();
                                 }
                             }
-                            
+
                         } else {
                             //System.out.println("调用失败");
                         }
@@ -118,7 +118,7 @@ public class ForkFileWriteTask extends RecursiveTask<Integer> {
                 if (response.isSuccess()) {
                     //System.out.println("调用成功");
                     List<DeviceResultInfo> infos = response.getDeviceInfos();
-                    if (infos!=null){
+                    if (infos != null) {
                         for (DeviceResultInfo info : infos) {
                             //System.out.println(String.format("device_id:%s;device_label:%s", info.getDeviceId(), info.getDeviceLabel()));
                             String label = info.getDeviceLabel();
@@ -129,7 +129,7 @@ public class ForkFileWriteTask extends RecursiveTask<Integer> {
                             writtenSize += label.length();
                         }
                     }
-                    
+
                 } else {
                     //System.out.println("调用失败");
                 }

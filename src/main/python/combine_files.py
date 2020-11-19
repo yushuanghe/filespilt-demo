@@ -24,8 +24,8 @@ def MergeTxt(filepath, exclude_file, outfile):
 
 
 if __name__ == '__main__':
-    filepath = 'C:/Users/yushu/Downloads/file_split/'
-    exclude_file = 'zhifubao_request_20201113.txt'
+    filepath = sys.argv[1]
+    exclude_file = sys.argv[2]
     outfile = 'result.txt'
     MergeTxt(filepath, exclude_file, outfile)
     time2 = time.time()
