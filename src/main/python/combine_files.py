@@ -3,6 +3,7 @@
 import os
 import os.path
 import time
+import sys
 time1 = time.time()
 ##########################合并同一个文件夹下多个txt################
 
