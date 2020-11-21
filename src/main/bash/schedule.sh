@@ -98,6 +98,7 @@ group by a.uid
 ;
 "
 hive -e "${sql}" > "${base_dir}zhifubao_result_${today_ds}.txt"
-tar -zcf "${base_dir}zhifubao_result_${today_ds}.tar.gz" "${base_dir}zhifubao_result_${today_ds}.txt"
+cd "${base_dir}"
+tar -zcf "zhifubao_result_${today_ds}.tar.gz" "zhifubao_result_${today_ds}.txt"
 
 set +x
