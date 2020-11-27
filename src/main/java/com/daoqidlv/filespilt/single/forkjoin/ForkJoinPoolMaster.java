@@ -22,9 +22,17 @@ public class ForkJoinPoolMaster extends Master {
 
     private ForkJoinPool forkJoinPool;
 
+    private String deviceType;
+
     public ForkJoinPoolMaster(String fileDir, String fileName, int subFileSizeLimit) {
         super(fileDir, fileName, subFileSizeLimit);
         this.forkJoinPool = new ForkJoinPool();
+    }
+
+    public ForkJoinPoolMaster(String fileDir, String fileName, int subFileSizeLimit, String deviceType) {
+        super(fileDir, fileName, subFileSizeLimit);
+        this.forkJoinPool = new ForkJoinPool();
+        this.deviceType = deviceType;
     }
 
     @Override
@@ -32,7 +40,7 @@ public class ForkJoinPoolMaster extends Master {
         System.out.println("begin to spilt...");
         long startTime = System.currentTimeMillis();
         String fullFileName = Util.genFullFileName(this.getFileDir(), this.getFileName());
-        ForkFileReadTask forkFileReadTask = new ForkFileReadTask(fullFileName, this.getFileSpiltter());
+        ForkFileReadTask forkFileReadTask = new ForkFileReadTask(fullFileName, this.getFileSpiltter(), deviceType);
         ForkJoinTask<Boolean> result = this.forkJoinPool.submit(forkFileReadTask);
 
         boolean res = false;

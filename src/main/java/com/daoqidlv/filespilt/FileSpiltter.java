@@ -112,7 +112,7 @@ public class FileSpiltter {
         return Util.genFullFileName(this.fileDir, fileName);
     }
 
-    public ForkFileWriteTask spiltForFork(String lineContent) {
+    public ForkFileWriteTask spiltForFork(String lineContent, String deviceType) {
         int totalSize = this.fileCacheSize + lineContent.length();
         //当前行加入后，缓存的文件内容大于上限值，则生成一个新的Task
         if (totalSize >= subFileSizeLimit) {
@@ -120,7 +120,7 @@ public class FileSpiltter {
             String subFileName = genSubFileName();
             List<String> fileCacheCopy = new ArrayList<String>();
             fileCacheCopy.addAll(this.fileCache);
-            ForkFileWriteTask fileWriteTask = new ForkFileWriteTask(this.fileDir, subFileName, fileCacheCopy, this.fileCacheSize);
+            ForkFileWriteTask fileWriteTask = new ForkFileWriteTask(this.fileDir, subFileName, fileCacheCopy, this.fileCacheSize, deviceType);
             //重置文件缓存和大小
             this.fileCache.clear();
             this.fileCacheSize = 0;

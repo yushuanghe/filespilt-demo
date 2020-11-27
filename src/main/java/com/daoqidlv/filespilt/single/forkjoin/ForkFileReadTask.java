@@ -31,9 +31,20 @@ public class ForkFileReadTask extends RecursiveTask<Boolean> {
      */
     private FileSpiltter fileSpiltter;
 
+    /**
+     * 设备id类型
+     */
+    private String deviceType;
+
     public ForkFileReadTask(String fullFileName, FileSpiltter fileSpiltter) {
         this.fullFileName = fullFileName;
         this.fileSpiltter = fileSpiltter;
+    }
+
+    public ForkFileReadTask(String fullFileName, FileSpiltter fileSpiltter, String deviceType) {
+        this.fullFileName = fullFileName;
+        this.fileSpiltter = fileSpiltter;
+        this.deviceType = deviceType;
     }
 
     /**
@@ -61,7 +72,7 @@ public class ForkFileReadTask extends RecursiveTask<Boolean> {
 //						e.printStackTrace();
 //					}
 //				}
-                ForkFileWriteTask fileWriteTask = this.fileSpiltter.spiltForFork(lineContent);//将任务提交pool处理
+                ForkFileWriteTask fileWriteTask = this.fileSpiltter.spiltForFork(lineContent, this.deviceType);//将任务提交pool处理
                 if (fileWriteTask != null) {
                     tasks.add(fileWriteTask);
                     fileWriteTask.fork();

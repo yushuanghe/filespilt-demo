@@ -44,11 +44,24 @@ public class ForkFileWriteTask extends RecursiveTask<Integer> {
      */
     private int fileSize;
 
+    /**
+     * 设备id类型
+     */
+    private String deviceType;
+
     public ForkFileWriteTask(String fileDir, String fileName, List<String> fileContent, int fileSize) {
         this.fileName = fileName;
         this.fileContent = fileContent;
         this.fileDir = fileDir;
         this.fileSize = fileSize;
+    }
+
+    public ForkFileWriteTask(String fileDir, String fileName, List<String> fileContent, int fileSize, String deviceType) {
+        this.fileName = fileName;
+        this.fileContent = fileContent;
+        this.fileDir = fileDir;
+        this.fileSize = fileSize;
+        this.deviceType = deviceType;
     }
 
 
@@ -77,7 +90,7 @@ public class ForkFileWriteTask extends RecursiveTask<Integer> {
                 if (i % 5 == 0) {
                     //批量请求
                     AlipayUserAccountDeviceInfoQueryRequest request = new AlipayUserAccountDeviceInfoQueryRequest();
-                    request.setBizContent(String.format("{\"device_type\":\"IMEI\",\"device_ids\":[%s],\"encrypt_type\":\"MD5\",\"request_from\":\"sigmob\"}", sb.deleteLastChar().toString()));
+                    request.setBizContent(String.format("{\"device_type\":\"%s\",\"device_ids\":[%s],\"encrypt_type\":\"MD5\",\"request_from\":\"sigmob\"}", deviceType, sb.deleteLastChar().toString()));
 
                     BufferedWriter finalBw = bw;
                     AlipayUtil.sendRequest(alipayClient, request, 0, response -> {
@@ -103,7 +116,7 @@ public class ForkFileWriteTask extends RecursiveTask<Integer> {
 
             //批量请求
             AlipayUserAccountDeviceInfoQueryRequest request = new AlipayUserAccountDeviceInfoQueryRequest();
-            request.setBizContent(String.format("{\"device_type\":\"IMEI\",\"device_ids\":[%s],\"encrypt_type\":\"MD5\",\"request_from\":\"sigmob\"}", sb.deleteLastChar().toString()));
+            request.setBizContent(String.format("{\"device_type\":\"%s\",\"device_ids\":[%s],\"encrypt_type\":\"MD5\",\"request_from\":\"sigmob\"}", deviceType, sb.deleteLastChar().toString()));
             BufferedWriter finalBw = bw;
             AlipayUtil.sendRequest(alipayClient, request, 0, response -> {
                 List<DeviceResultInfo> infos = response.getDeviceInfos();

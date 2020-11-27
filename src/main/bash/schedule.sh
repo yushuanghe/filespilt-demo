@@ -83,7 +83,7 @@ OUTPUTFORMAT
   'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
 ;
 
-LOAD DATA LOCAL INPATH '/home/data_deployer/shuanghe.yu/dmp/rta/zhifubao/file_split/result.txt' OVERWRITE INTO TABLE tmp.zhifubao_result_${today_ds};
+LOAD DATA LOCAL INPATH '${file_split_dir}result.txt' OVERWRITE INTO TABLE tmp.zhifubao_result_${today_ds};
 "
 hive -e "${sql}"
 

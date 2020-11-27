@@ -20,6 +20,7 @@ public class Test {
         int writeTaskNum = 8;
         int queueSize = 10240;
         int bufferSize = 1024;
+        String deviceType = "IMEI";
         //获取参数
         if (args != null) {
             if (args.length == 4) {
@@ -30,6 +31,8 @@ public class Test {
                 queueSize = Integer.valueOf(args[6]);
             } else if (args.length == 8) {
                 bufferSize = Integer.valueOf(args[7]);
+            } else if (args.length == 9) {
+                deviceType = args[8];
             } else {
                 System.err.println("参数为空，示例：#fileDir, #fileName, #subFileSizeLimit, #mode [, #readTaskNum, #writeTaskNum, #queueSize, #bufferSize]，");
                 return;
@@ -74,7 +77,7 @@ public class Test {
         }
 
         //通过工厂方法获取master实例
-        Master master = Master.getMasterInstance(mode, fileDir, fileName, subFileSizeLimit, readTaskNum, writeTaskNum, queueSize, bufferSize);
+        Master master = Master.getMasterInstance(mode, fileDir, fileName, subFileSizeLimit, readTaskNum, writeTaskNum, queueSize, bufferSize, deviceType);
         System.out.println("The master is: " + master.getClass().getName());
         master.init();
         //启动master

@@ -52,7 +52,7 @@ public abstract class Master {
             int readTaskNum,
             int writeTaskNum,
             int queueSize,
-            int bufferSize) {
+            int bufferSize, String deviceType) {
         if (masterType.equals(Constants.MASTER_TYPE_NORMAL_POOL)) {
             return new NormalPoolMaster(fileDir, fileName, subFileSizeLimit);
             //默认使用NormalPoolMaster
@@ -61,7 +61,7 @@ public abstract class Master {
         } else if (masterType.equals(Constants.MASTER_TYPE_DISRUPTOR)) {
             return new DisruptorMaster(fileDir, fileName, subFileSizeLimit, readTaskNum, writeTaskNum, queueSize, bufferSize);
         } else {
-            return new ForkJoinPoolMaster(fileDir, fileName, subFileSizeLimit);
+            return new ForkJoinPoolMaster(fileDir, fileName, subFileSizeLimit, deviceType);
         }
     }
 
